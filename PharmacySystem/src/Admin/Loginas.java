@@ -18,7 +18,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.GroupLayout.Alignment;
 
-public class Loginas extends JFrame {
+public class Loginas extends JFrame implements Cloneable {
+
     private JButton jButton1;
     private JLabel jLabel1;
     private JButton jbthExit;
@@ -76,6 +77,14 @@ public class Loginas extends JFrame {
         this.setLocationRelativeTo((Component)null);
     }
 
+    protected Loginas clone() {
+        try {
+            return (Loginas) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     private void jbtnAdminActionPerformed(ActionEvent evt) {
         Adminlogin Info = new Adminlogin();
         Info.setVisible(true);
