@@ -111,7 +111,7 @@ public class MainMenu extends JFrame {
     }
 
     private void jButton1ActionPerformed(ActionEvent evt) {
-        AddMedicine info = new AddMedicine();
+        AddMedicine info = AddMedicine.getInstance();
         info.setVisible(true);
         this.dispose();
     }

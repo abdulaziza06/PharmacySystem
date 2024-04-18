@@ -26,6 +26,9 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class AddMedicine extends JFrame {
+
+    private static AddMedicine instance = null;
+
     private JButton createDrugJButton;
     private JTextField didtxt;
     private JTextField dmdtxt;
@@ -45,8 +48,15 @@ public class AddMedicine extends JFrame {
     private JTextField prctxt;
     private JTextField qtytxt;
 
-    public AddMedicine() {
+    private AddMedicine() {
         this.initComponents();
+    }
+
+    public static AddMedicine getInstance() {
+        if (instance == null) {
+            instance = new AddMedicine();
+        }
+        return instance;
     }
 
     private void initComponents() {
