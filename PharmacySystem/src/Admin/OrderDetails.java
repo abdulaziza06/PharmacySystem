@@ -11,6 +11,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.GroupLayout;
@@ -31,9 +33,11 @@ public class OrderDetails extends JFrame {
     private JTable jTable1;
     private JButton jbtnback;
     private Panel panel1;
+    private List<Order> orders;
 
     public OrderDetails() {
         this.initComponents();
+        this.orders = new ArrayList<>();
         this.showList();
     }
 
@@ -46,16 +50,17 @@ public class OrderDetails extends JFrame {
             BufferedReader br = new BufferedReader(fr);
             DefaultTableModel table = (DefaultTableModel)this.jTable1.getModel();
             Object[] lines = br.lines().toArray();
-
             for(int i = 0; i < lines.length; ++i) {
                 String[] row = lines[i].toString().split(" ");
-                table.addRow(row);
+                Order order = new Order(row[0], row[1], row[2], row[3], row[4], row[5], row[6]);
+                orders.add(order);
+                table.addRow(new String[]{row[0], row[1], row[2], row[3], row[4], row[5], row[6]});
             }
         } catch (IOException var9) {
-            System.out.println("IOException has occured");
+            System.out.println("IOException has occurred");
         }
-
     }
+
 
     private void initComponents() {
         this.jLabel1 = new JLabel();
@@ -122,6 +127,27 @@ public class OrderDetails extends JFrame {
         MainMenu m = new MainMenu();
         m.setVisible(true);
         this.dispose();
+    }
+
+    private class Order {
+        private String id;
+        private String name;
+        private String type;
+        private String expiryDate;
+        private String quantity;
+        private String price;
+        private String totalPrice;
+
+        public Order(String id, String name, String type, String expiryDate, String quantity, String price, String totalPrice) {
+            this.id = id;
+            this.name = name;
+            this.type = type;
+            this.expiryDate = expiryDate;
+            this.quantity = quantity;
+            this.price = price;
+            this.totalPrice = totalPrice;
+        }
+
     }
 
     public static void main(String[] args) {
