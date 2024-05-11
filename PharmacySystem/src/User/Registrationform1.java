@@ -1,5 +1,9 @@
 package User;
 
+import Decorator.EncryptionDecorator;
+import Decorator.RegistrationDecorator;
+import Decorator.ValidationDecorator;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -277,21 +281,37 @@ public class Registrationform1 extends JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException var5) {
-            Logger.getLogger(Registrationform1.class.getName()).log(Level.SEVERE, (String)null, var5);
-        } catch (InstantiationException var6) {
-            Logger.getLogger(Registrationform1.class.getName()).log(Level.SEVERE, (String)null, var6);
-        } catch (IllegalAccessException var7) {
-            Logger.getLogger(Registrationform1.class.getName()).log(Level.SEVERE, (String)null, var7);
-        } catch (UnsupportedLookAndFeelException var8) {
-            Logger.getLogger(Registrationform1.class.getName()).log(Level.SEVERE, (String)null, var8);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            Logger.getLogger(Registrationform1.class.getName()).log(Level.SEVERE, null, e);
         }
 
         EventQueue.invokeLater(new Runnable() {
             public void run() {
-                (new Registrationform1()).setVisible(true);
+                Registrationform1 form = new Registrationform1();
+
+                // Create decorators
+                ValidationDecorator validationDecorator = new ValidationDecorator(form);
+                EncryptionDecorator encryptionDecorator = new EncryptionDecorator(form);
+
+                // Add decorators as needed
+                form.addDecorator(validationDecorator);
+                form.addDecorator(encryptionDecorator);
+
+                form.setVisible(true);
             }
         });
+    }
+
+    // New method to attach decorators
+    public void addDecorator(RegistrationDecorator decorator) {
+        decorator.actionPerformed();
+    }
+
+    public void validateInputs() {
+
+    }
+    public void encryptData() {
+        // Add encryption logic here
     }
 }
 
