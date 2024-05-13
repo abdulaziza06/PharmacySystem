@@ -17,6 +17,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,7 +43,13 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+interface MedicinelistObserver {
+    void update(List<String[]> medicines);
+}
+
 public class ShowMedicinelist extends JFrame {
+
+    private List<MedicinelistObserver> observers = new ArrayList<>();
     private Object Rowfilter;
     private JButton JButtonAdd;
     private JButton btnCheckOut;
@@ -64,6 +72,20 @@ public class ShowMedicinelist extends JFrame {
     private JSpinner quantitySpinner;
     private JButton viewListtxt;
 
+    public void attachObserver(MedicinelistObserver observer) {
+        observers.add(observer);
+    }
+
+    public void detachObserver(MedicinelistObserver observer) {
+        observers.remove(observer);
+    }
+
+    private void notifyObservers(List<String[]> medicines) {
+        for (MedicinelistObserver observer : observers) {
+            observer.update(medicines);
+        }
+    }
+
     public ShowMedicinelist() {
         this.initComponents();
         this.showList();
@@ -71,14 +93,16 @@ public class ShowMedicinelist extends JFrame {
     }
 
     public void showList() {
-        DefaultTableModel table = (DefaultTableModel)this.ptable.getModel();
+        DefaultTableModel table = (DefaultTableModel) this.ptable.getModel();
+        List<String[]> medicines = new ArrayList<>();
+
         File f1 = new File("MedicineData.txt");
 
         try {
             Scanner read = new Scanner(f1);
             String[] info = new String[7];
 
-            while(read.hasNext()) {
+            while (read.hasNext()) {
                 info[0] = read.next();
                 info[1] = read.next();
                 info[2] = read.next();
@@ -87,11 +111,14 @@ public class ShowMedicinelist extends JFrame {
                 info[5] = read.next();
                 info[6] = read.next();
                 table.addRow(info);
+                medicines.add(info.clone()); // Cloning the array to avoid reference issues
             }
         } catch (IOException var5) {
-            System.out.println("IOException has occured");
+            System.out.println("IOException has occurred");
         }
 
+        // Notify observers about the updated medicine list
+        notifyObservers(medicines);
     }
 
     private void initComponents() {
