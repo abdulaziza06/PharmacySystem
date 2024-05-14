@@ -20,6 +20,17 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+interface AuthenticationStrategy {
+    boolean authenticate(String userId, String password);
+}
+
+class AdminAuthenticationStrategy implements AuthenticationStrategy {
+    @Override
+    public boolean authenticate(String userId, String password) {
+        return password.contains("1997") && userId.contains("hulk");
+    }
+}
+
 public class Adminlogin extends JFrame {
     private JButton jButton1;
     private JLabel jLabel1;
@@ -32,6 +43,26 @@ public class Adminlogin extends JFrame {
 
     public Adminlogin() {
         this.initComponents();
+    }
+
+    public Adminlogin(AuthenticationStrategy authenticationStrategy) {
+        this.initComponents();
+        this.jbtnLogin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                // Delegate authentication logic to the provided strategy
+                if (authenticationStrategy.authenticate(jTextUserId.getText(), new String(jPassword.getPassword()))) {
+                    jTextUserId.setText(null);
+                    jPassword.setText(null);
+                    MainMenu we = new MainMenu();
+                    we.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Invalid Login Details", "Login Error", JOptionPane.ERROR_MESSAGE);
+                    jPassword.setText(null);
+                    jTextUserId.setText(null);
+                }
+            }
+        });
     }
 
     private void initComponents() {
@@ -130,7 +161,8 @@ public class Adminlogin extends JFrame {
 
         EventQueue.invokeLater(new Runnable() {
             public void run() {
-                (new Adminlogin()).setVisible(true);
+                AuthenticationStrategy adminAuthenticationStrategy = new AdminAuthenticationStrategy();
+                (new Adminlogin(adminAuthenticationStrategy)).setVisible(true);
             }
         });
     }
