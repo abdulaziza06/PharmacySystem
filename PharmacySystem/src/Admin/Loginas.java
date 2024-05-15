@@ -30,6 +30,15 @@ public class Loginas extends JFrame implements Cloneable {
         this.initComponents();
     }
 
+    public Loginas clone() {
+        try {
+            return (Loginas) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private void initComponents() {
         this.jLabel1 = new JLabel();
         this.jbtnAdmin = new JButton();
@@ -77,14 +86,6 @@ public class Loginas extends JFrame implements Cloneable {
         this.setLocationRelativeTo((Component)null);
     }
 
-    protected Loginas clone() {
-        try {
-            return (Loginas) super.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
     private void jbtnAdminActionPerformed(ActionEvent evt) {
         Adminlogin Info = new Adminlogin();
         Info.setVisible(true);
